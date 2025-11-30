@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Protocole Mirage – Golden Ace</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* ========== BASE ========== */
+    :root {
+      --ke-bg: #0b0b0f;
+      --ke-bg-soft: #151520;
+      --ke-red: #da4f40;
+      --ke-gold: #d4af37;
+      --ke-text: #f5f5f5;
+      --ke-muted: #a3a3b8;
+      --ke-border: #262638;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.55);
+      --transition-fast: 0.2s ease-out;
+      --transition-med: 0.3s ease-out;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: radial-gradient(circle at top, #1b1b2f 0, #050509 55%, #000 100%);
+      color: var(--ke-text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 40px 16px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 900px;
+      background: linear-gradient(145deg, #101018, #050509);
+      border-radius: 24px;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      box-shadow: var(--shadow-soft);
+      padding: 28px 22px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at top right, rgba(212, 175, 55, 0.06), transparent 60%),
+        radial-gradient(circle at bottom left, rgba(218, 79, 64, 0.08), transparent 60%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .page-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ========== HEADER ========== */
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.65);
+      border-radius: 999px;
+      padding: 6px 14px;
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ke-gold);
+      margin-bottom: 10px;
+    }
+
+    .badge span {
+      font-size: 14px;
+    }
+
+    h1 {
+      font-size: 26px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--ke-muted);
+      max-width: 620px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* ========== SECTIONS GÉNÉRALES ========== */
+    section {
+      background: rgba(5, 5, 12, 0.9);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(68, 68, 102, 0.65);
+      padding: 18px 16px 18px;
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(212, 175, 55, 0.14),
+        transparent 45%,
+        transparent 55%,
+        rgba(218, 79, 64, 0.12)
+      );
+      opacity: 0.22;
+      pointer-events: none;
+    }
+
+    section > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    section h2 {
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 10px;
+      color: var(--ke-gold);
+    }
+
+    section p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--ke-text);
+    }
+
+    .section-note {
+      font-size: 12px;
+      margin-top: 6px;
+      color: var(--ke-muted);
+      font-style: italic;
+    }
+
+    /* ========== INTRO ========== */
+    .intro-list {
+      margin-top: 10px;
+      list-style: none;
+      font-size: 13px;
+      color: var(--ke-muted);
+    }
+
+    .intro-list li {
+      margin-bottom: 4px;
+    }
+
+    .intro-list li::before {
+      content: "◆";
+      color: var(--ke-red);
+      margin-right: 8px;
+      font-size: 10px;
+    }
+
+    /* ========== DOSSIERS ========== */
+    .dossiers-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    @media (min-width: 720px) {
+      .dossiers-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .dossier {
+      background: radial-gradient(circle at top, #212135, #0b0b14);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--ke-border);
+      padding: 10px 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+        border-color var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .dossier:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.6);
+      border-color: rgba(212, 175, 55, 0.6);
+    }
+
+    .dossier-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .dossier-tag {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ke-gold);
+    }
+
+    .dossier-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .dossier-icon {
+      font-size: 16px;
+    }
+
+    .dossier-body {
+      font-size: 12px;
+      color: var(--ke-muted);
+      line-height: 1.5;
+    }
+
+    .dossier-content {
+      margin-top: 6px;
+      display: none;
+      font-size: 12px;
+      color: var(--ke-text);
+    }
+
+    .dossier.open .dossier-content {
+      display: block;
+    }
+
+    .toggle-hint {
+      font-size: 11px;
+      color: var(--ke-muted);
+      text-align: right;
+      margin-top: 3px;
+      font-style: italic;
+    }
+
+    .symbol-block {
+      margin-top: 8px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      border: 1px dashed rgba(212, 175, 55, 0.7);
+      background: rgba(0, 0, 0, 0.45);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+    }
+
+    .symbol {
+      font-size: 20px;
+    }
+
+    .spoiler {
+      filter: blur(5px);
+      cursor: pointer;
+      transition: filter var(--transition-med);
+    }
+
+    .spoiler.revealed {
+      filter: blur(0);
+    }
+
+    .spoiler-hint {
+      font-size: 11px;
+      color: var(--ke-muted);
+      margin-top: 4px;
+    }
+
+    /* ========== ROUE MIRAGE ========== */
+    .roulette-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 720px) {
+      .roulette-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .roulette-wheel {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border-radius: 999px;
+      border: 2px solid rgba(212, 175, 55, 0.8);
+      background: conic-gradient(
+        from -90deg,
+        rgba(218, 79, 64, 0.9) 0deg,
+        rgba(218, 79, 64, 0.9) 60deg,
+        rgba(5, 5, 12, 1) 60deg,
+        rgba(5, 5, 12, 1) 120deg,
+        rgba(212, 175, 55, 0.9) 120deg,
+        rgba(212, 175, 55, 0.9) 180deg,
+        rgba(5, 5, 12, 1) 180deg,
+        rgba(5, 5, 12, 1) 240deg,
+        rgba(205, 205, 255, 0.25) 240deg,
+        rgba(205, 205, 255, 0.25) 300deg,
+        rgba(218, 79, 64, 0.9) 300deg,
+        rgba(218, 79, 64, 0.9) 360deg
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+    }
+
+    .roulette-center {
+      width: 38%;
+      height: 38%;
+      border-radius: 50%;
+      background: radial-gradient(circle at top, #ffffff, #f0e3b4, #7b6124);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #2a1b07;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 11px;
+      border: 3px solid #000000;
+    }
+
+    .roulette-center span {
+      font-size: 12px;
+    }
+
+    .roulette-segments {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+      font-size: 12px;
+    }
+
+    .segment-btn {
+      border-radius: 999px;
+      padding: 6px 9px;
+      border: 1px solid rgba(88, 88, 120, 0.9);
+      background: rgba(3, 3, 9, 0.9);
+      color: var(--ke-text);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background var(--transition-fast), border-color var(--transition-fast),
+        transform var(--transition-fast);
+    }
+
+    .segment-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(212, 175, 55, 0.6);
+      background: radial-gradient(circle at top, rgba(212, 175, 55, 0.08), #05050a);
+    }
+
+    .segment-btn.active {
+      border-color: var(--ke-gold);
+      background: radial-gradient(circle at top, rgba(212, 175, 55, 0.14), #05050a);
+    }
+
+    .segment-label {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 10px;
+      color: var(--ke-muted);
+    }
+
+    .segment-symbol {
+      font-size: 16px;
+    }
+
+    .segment-desc {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--ke-muted);
+      min-height: 38px;
+      border-top: 1px dashed rgba(80, 80, 120, 0.7);
+      padding-top: 6px;
+    }
+
+    /* ========== CODE FINAL ========== */
+    .final-wrap {
+      margin-top: 6px;
+      display: grid;
+      grid-template-columns: 1.1fr 1.1fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 720px) {
+      .final-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .final-info {
+      font-size: 13px;
+      color: var(--ke-muted);
+      line-height: 1.6;
+    }
+
+    .code-form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    label {
+      font-size: 13px;
+      color: var(--ke-text);
+    }
+
+    .code-input {
+      width: 100%;
+      max-width: 260px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(96, 96, 128, 0.9);
+      background: rgba(7, 7, 18, 0.95);
+      color: var(--ke-text);
+      font-size: 14px;
+      outline: none;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast),
+        background var(--transition-fast);
+    }
+
+    .code-input:focus {
+      border-color: var(--ke-gold);
+      box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.5);
+      background: rgba(10, 10, 20, 0.98);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(212, 175, 55, 0.85);
+      background: radial-gradient(circle at top, #ffe9b0, #b38424);
+      color: #1b1305;
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast),
+        filter var(--transition-fast);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.8);
+      filter: brightness(1.03);
+    }
+
+    .btn-primary span {
+      font-size: 15px;
+    }
+
+    .result-message {
+      font-size: 13px;
+      margin-top: 4px;
+      min-height: 18px;
+    }
+
+    .result-success {
+      color: #8ff7a5;
+    }
+
+    .result-error {
+      color: #ff9b9b;
+    }
+
+    /* ========== FOOTER ========== */
+    footer {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--ke-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="page-inner">
+      <header>
+        <div class="badge">
+          <span>Kill Event</span> • Golden Ace Casino
+        </div>
+        <h1>Protocole Mirage</h1>
+        <p class="subtitle">
+          Vous avez retrouvé le Collier Étoile Noire… mais la Chambre Forte s’est verrouillée.
+          Désactivez le système de sécurité du Golden Ace pour espérer sortir d’ici en un seul morceau.
+        </p>
+      </header>
+
+      <!-- INTRO -->
+      <section>
+        <h2>Votre Situation</h2>
+        <p>
+          À peine le collier récupéré, un signal silencieux s’est déclenché. Les verrous magnétiques se sont
+          refermés, les issues sont condamnées. Le “Protocole Mirage”, le système anti-intrusion personnel du
+          fondateur du Golden Ace, vient de s’activer.
+        </p>
+        <ul class="intro-list">
+          <li>Trois dossiers confidentiels sont encore accessibles sur le terminal de sécurité.</li>
+          <li>Une roue de casino truquée semble contrôler le système.</li>
+          <li>Un code final de désactivation doit être entré sur le clavier numérique.</li>
+        </ul>
+        <p class="section-note">
+          Résolvez d’abord les trois dossiers, puis utilisez la Roue Mirage pour déduire la combinaison.
+        </p>
+      </section>
+
+      <!-- DOSSIERS -->
+      <section>
+        <h2>Dossiers Confidentiels du Golden Ace</h2>
+        <p>
+          Chaque dossier contient une anomalie à identifier&nbsp;: phrase codée, détail incohérent, ou plan truqué.
+          Quand vous pensez avoir trouvé la solution, vous pouvez vérifier le symbole associé en révélant le bandeau.
+        </p>
+        <p class="section-note">
+          🎭 Jouez fair-play : ne révélez le symbole qu’après avoir résolu l’énigme sur papier ou à voix haute.
+        </p>
+
+        <div class="dossiers-grid">
+          <!-- DOSSIER A -->
+          <article class="dossier" data-dossier="A">
+            <div class="dossier-header">
+              <div>
+                <div class="dossier-tag">Dossier A</div>
+                <div class="dossier-name">Surveillance caméras</div>
+              </div>
+              <div class="dossier-icon">📹</div>
+            </div>
+            <div class="dossier-body">
+              Rapport extrait du système vidéo. Un détail ne colle pas avec la réalité du casino.
+            </div>
+            <div class="toggle-hint">Cliquer pour ouvrir / fermer</div>
+
+            <div class="dossier-content">
+              <p>
+                Le rapport mentionne successivement quatre zones filmées&nbsp;: <strong>Roulette – Bar – Salle VIP – Coffre</strong>.<br />
+                Pourtant, sur le plan officiel du Golden Ace, l’une de ces salles ne se trouve <em>pas</em> sur le même étage.
+                Identifiez laquelle.
+              </p>
+              <p class="section-note">
+                ➜ La salle anormale révèle un symbole lié aux angles morts des caméras.
+              </p>
+              <div class="symbol-block">
+                Symbole Dossier A&nbsp;:
+                <span class="symbol spoiler" data-symbol="A">♠</span>
+              </div>
+              <div class="spoiler-hint">
+                Cliquez sur le symbole pour le <strong>révéler / flouter</strong>.
+              </div>
+            </div>
+          </article>
+
+          <!-- DOSSIER B -->
+          <article class="dossier" data-dossier="B">
+            <div class="dossier-header">
+              <div>
+                <div class="dossier-tag">Dossier B</div>
+                <div class="dossier-name">Transactions &amp; jetons</div>
+              </div>
+              <div class="dossier-icon">💳</div>
+            </div>
+            <div class="dossier-body">
+              Historique interne des mises de la soirée. Les chiffres cachent une logique.
+            </div>
+            <div class="toggle-hint">Cliquer pour ouvrir / fermer</div>
+
+            <div class="dossier-content">
+              <p>
+                Quatre mises sont listées en clair&nbsp;: <strong>25 – 50 – 100 – 250</strong>.<br />
+                En dessous, une note manuscrite indique&nbsp;: <em>“Toujours miser sur la couleur qui gagne deux fois de suite.”</em><br />
+                Sur vos feuilles d’énigmes papier, retrouvez où cette suite de mises apparaît
+                et quelle couleur gagne <strong>deux fois</strong> consécutives.
+              </p>
+              <p class="section-note">
+                ➜ Cette couleur fait référence à un symbole précis de casino.
+              </p>
+              <div class="symbol-block">
+                Symbole Dossier B&nbsp;:
+                <span class="symbol spoiler" data-symbol="B">♦</span>
+              </div>
+              <div class="spoiler-hint">
+                Cliquez sur le symbole pour le <strong>révéler / flouter</strong>.
+              </div>
+            </div>
+          </article>
+
+          <!-- DOSSIER C -->
+          <article class="dossier" data-dossier="C">
+            <div class="dossier-header">
+              <div>
+                <div class="dossier-tag">Dossier C</div>
+                <div class="dossier-name">Plan de sécurité</div>
+              </div>
+              <div class="dossier-icon">📐</div>
+            </div>
+            <div class="dossier-body">
+              Schéma simplifié du coffre. Une coordonnée ne correspond pas au plan réel.
+            </div>
+            <div class="toggle-hint">Cliquer pour ouvrir / fermer</div>
+
+            <div class="dossier-content">
+              <p>
+                Sur le plan papier de la Chambre Forte, six compartiments sont numérotés.<br />
+                Le dossier C indique&nbsp;: <em>“Compartiment visé&nbsp;: ligne 1, colonne 3”</em>.<br />
+                Mais d’après les indices déjà trouvés, vous savez que le compartiment correct
+                n’est pas sur cette coordonnée. Trouvez celui qui devrait être visé à la place.
+              </p>
+              <p class="section-note">
+                ➜ La bonne coordonnée renvoie à un symbole lié à la chance… ou à sa parodie.
+              </p>
+              <div class="symbol-block">
+                Symbole Dossier C&nbsp;:
+                <span class="symbol spoiler" data-symbol="C">⭐</span>
+              </div>
+              <div class="spoiler-hint">
+                Cliquez sur le symbole pour le <strong>révéler / flouter</strong>.
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ROUE MIRAGE -->
+      <section>
+        <h2>Roue Mirage</h2>
+        <p>
+          Le Protocole Mirage ne se désactive qu’en combinant les trois symboles extraits des dossiers
+          avec trois symboles complémentaires cachés dans la roue. Chaque segment fait écho à
+          une zone du casino et à une couleur, un nombre ou un motif récurrent dans vos énigmes papier.
+        </p>
+
+        <div class="roulette-layout">
+          <div class="roulette-wheel">
+            <div class="roulette-center">
+              <span>Golden Ace</span>
+              <div>Roue Mirage</div>
+            </div>
+          </div>
+          <div>
+            <div class="roulette-segments">
+              <button class="segment-btn" data-segment="1">
+                <div>
+                  <div class="segment-label">Segment 1</div>
+                  Salle de Poker
+                </div>
+                <div class="segment-symbol">♣</div>
+              </button>
+              <button class="segment-btn" data-segment="2">
+                <div>
+                  <div class="segment-label">Segment 2</div>
+                  Scène du Cabaret
+                </div>
+                <div class="segment-symbol">♥</div>
+              </button>
+              <button class="segment-btn" data-segment="3">
+                <div>
+                  <div class="segment-label">Segment 3</div>
+                  Salle des Trophées
+                </div>
+                <div class="segment-symbol">🔔</div>
+              </button>
+              <button class="segment-btn" data-segment="4">
+                <div>
+                  <div class="segment-label">Segment 4</div>
+                  Entrée principale
+                </div>
+                <div class="segment-symbol">♠</div>
+              </button>
+              <button class="segment-btn" data-segment="5">
+                <div>
+                  <div class="segment-label">Segment 5</div>
+                  Bar du Casino
+                </div>
+                <div class="segment-symbol">♦</div>
+              </button>
+              <button class="segment-btn" data-segment="6">
+                <div>
+                  <div class="segment-label">Segment 6</div>
+                  Galerie VIP
+                </div>
+                <div class="segment-symbol">⭐</div>
+              </button>
+            </div>
+            <div class="segment-desc" id="segment-desc">
+              Cliquez sur un segment pour lire un indice symbolique associé à cette zone.
+              Utilisez ces liens pour déterminer quels trois symboles complètent ceux des dossiers.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CODE FINAL -->
+      <section>
+        <h2>Code Final de Désactivation</h2>
+        <div class="final-wrap">
+          <div class="final-info">
+            En combinant les <strong>3 symboles</strong issus des dossiers et les
+            <strong>3 symboles complémentaires</strong de la Roue Mirage, vous obtenez une
+            séquence complète. Sur vos feuilles papier, transformez cette suite de
+            symboles en un mot de passe (par exemple via un ordre spécifique, un
+            acrostiche, ou une conversion symbole → lettre).
+            <br><br>
+            Lorsque vous êtes sûrs de vous, entrez votre
+            <strong>mot de passe final</strong> ci-dessous.
+          </div>
+          <div class="code-form">
+            <label for="player-code">
+              Entrez le code final (mot de passe)&nbsp;:
+            </label>
+            <input
+              id="player-code"
+              class="code-input"
+              type="text"
+              placeholder="Ex. MIRAGE"
+              autocomplete="off"
+            />
+            <button class="btn-primary" id="check-code">
+              <span>⟡</span> Valider le code
+            </button>
+            <div class="result-message" id="result-message"></div>
+            <p class="section-note">
+              Le mot de passe par défaut dans ce prototype est <strong>“MIRAGE”</strong>
+              (à adapter à ton scénario papier). Côté technique, tu peux changer cette valeur
+              dans la constante <code>FINAL_CODE</code> dans le script.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        Kill Event · Golden Ace – Protocole Mirage · Escape Game numérique final
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    // ========================
+    // Paramètre : code final
+    // ========================
+    const FINAL_CODE = "MIRAGE"; // 👉 Change ici si tu veux un autre mot de passe
+
+    // ========== Dossiers (ouvrir/fermer) ==========
+    document.querySelectorAll(".dossier").forEach((card) => {
+      card.addEventListener("click", (e) => {
+        // éviter que le clic sur le symbole spoiler ferme le dossier
+        if (e.target.classList.contains("spoiler")) return;
+        card.classList.toggle("open");
+      });
+    });
+
+    // ========== Spoilers (blur / reveal) ==========
+    document.querySelectorAll(".spoiler").forEach((sp) => {
+      sp.addEventListener("click", (e) => {
+        e.stopPropagation();
+        sp.classList.toggle("revealed");
+      });
+    });
+
+    // ========== Roue Mirage : description segments ==========
+    const segmentDesc = document.getElementById("segment-desc");
+    const segmentTexts = {
+      1: "Salle de Poker : symbolise la stratégie, la patience… et la couleur qui gagne rarement quand on la néglige.",
+      2: "Scène du Cabaret : tout est une question de mise en scène. Ce qui brille n’est pas toujours la bonne mise.",
+      3: "Salle des Trophées : on y expose tout ce qui a déjà gagné, parfois une cloche sonne la fin de la partie.",
+      4: "Entrée principale : c’est là que tout commence… mais rarement là que les histoires se terminent.",
+      5: "Bar du Casino : on y noie ses pertes et on y porte un toast aux victoires, de rouge comme de noir.",
+      6: "Galerie VIP : seuls les symboles les plus rares entrent ici. Demandez-vous lesquels reviennent le moins souvent."
+    };
+
+    document.querySelectorAll(".segment-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".segment-btn").forEach((b) =>
+          b.classList.remove("active")
+        );
+        btn.classList.add("active");
+        const seg = btn.getAttribute("data-segment");
+        segmentDesc.textContent = segmentTexts[seg] || "";
+      });
+    });
+
+    // ========== Vérification du code final ==========
+    const codeInput = document.getElementById("player-code");
+    const resultMsg = document.getElementById("result-message");
+    const checkBtn = document.getElementById("check-code");
+
+    function checkCode() {
+      const value = codeInput.value.trim().toUpperCase();
+      if (!value) {
+        resultMsg.textContent = "Entrez d’abord un mot de passe.";
+        resultMsg.className = "result-message result-error";
+        return;
+      }
+
+      if (value === FINAL_CODE.toUpperCase()) {
+        resultMsg.textContent =
+          "Protocole Mirage désactivé. Les verrous se déverrouillent dans un claquement sec. Vous pouvez enfin sortir de la Chambre Forte.";
+        resultMsg.className = "result-message result-success";
+      } else {
+        resultMsg.textContent =
+          "Le terminal clignote en rouge. Code incorrect. Replongez-vous dans les symboles et l’ordre choisi.";
+        resultMsg.className = "result-message result-error";
+      }
+    }
+
+    checkBtn.addEventListener("click", checkCode);
+
+    codeInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        checkCode();
+      }
+    });
+  </script>
+</body>
+</html>
